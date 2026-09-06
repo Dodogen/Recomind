@@ -1,4 +1,5 @@
 using System.Linq;
+using _Recomind.Scripts.Util;
 using UnityEngine;
 
 namespace _Recomind.Scripts.Core
@@ -9,37 +10,29 @@ namespace _Recomind.Scripts.Core
         
         private IInitializationContext _context;
         private bool _isInitialized;
-
-        public IInitializationContext Context
-        {
-            get=>_context; 
-            private set => _context = value;
-        }
         
         private void Awake()
         {
             if (!_isInitialized) Initialize();
-            
         }
         private void Initialize()
         {
-            Context = new InitializationContext();
+            _context = new InitializationContext();
 
             var systems = _initableSystems
                 .Where(s => s != null)
                 .OrderBy(s => s.InitOrder)
                 .ToList();
 
-            foreach (var system in systems)
+            systems.ForEach(x=>
             {
-                system.Validate();
-                system.Initialize(Context);
-                Context.Register(system);
-            }
-
+                x.Initialize();
+                _context.Register(x);
+            });
+            
+            ServiceLocator.Initialize(_context);
+            
             _isInitialized = true;
         }
-        
-        public T GetSystem<T>() where T: class, IInitializable => _context.Get<T>();
     }
 }
