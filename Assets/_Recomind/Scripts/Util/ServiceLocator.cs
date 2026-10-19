@@ -11,7 +11,7 @@ namespace _Recomind.Scripts.Util
             _context = context;
         }
 
-        public static T Get<T>() where T : class, IInitializable
+        public static T GetSystem<T>() where T : class, IInitializable
         {
             return _context.Get<T>();
         }
