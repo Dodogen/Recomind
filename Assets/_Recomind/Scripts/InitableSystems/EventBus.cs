@@ -16,29 +16,29 @@ namespace _Recomind.Scripts.InitableSystems
             _handlers = new();
         }
 
-        public void Subscribe<T>(Action<T> handler) where T: struct
+        public void Subscribe<TEventData>(Action<TEventData> handler) where TEventData: struct
         {
-            if (!_handlers.TryGetValue(typeof(T), out var list))
+            if (!_handlers.TryGetValue(typeof(TEventData), out var list))
             {
                 list = new();
-                _handlers[typeof(T)] = list;
+                _handlers[typeof(TEventData)] = list;
             }
             list.Add(handler);
         }
 
-        public void Unsubscribe<T>(Action<T> handler) where T: struct
+        public void Unsubscribe<TEventData>(Action<TEventData> handler) where TEventData: struct
         {
-            if (_handlers.TryGetValue(typeof(T), out var list))
+            if (_handlers.TryGetValue(typeof(TEventData), out var list))
             {
                 list.Remove(handler);
             }
         }
 
-        public void Publish<T>(T eventData) where T: struct
+        public void Publish<TEventData>(TEventData eventData) where TEventData: struct
         {
-            if (_handlers.TryGetValue(typeof(T), out var list))
+            if (_handlers.TryGetValue(typeof(TEventData), out var list))
             {
-                list.ForEach(handler => ((Action<T>)handler)?.Invoke(eventData));
+                list.ForEach(handler => ((Action<TEventData>)handler)?.Invoke(eventData));
             }
         }
     }
