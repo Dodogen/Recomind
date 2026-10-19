@@ -32,6 +32,7 @@ namespace _Recomind.Scripts.Core
             
             ServiceLocator.Initialize(_context);
             
+            DontDestroyOnLoad(this);
             _isInitialized = true;
         }
     }
